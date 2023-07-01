@@ -4,11 +4,13 @@ import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/model/User.schema';
 import { RedisModule } from '../redis/redis.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
     RedisModule,
     MongooseModule.forFeature([{ name: 'user', schema: UserSchema }]),
+    UserModule,
   ],
   providers: [AuthService],
   controllers: [AuthController],

@@ -12,9 +12,11 @@ import { GlobalExceptionFilter } from 'src/common/exception/global-error.filter'
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { CacheStore } from '@nestjs/common/cache/interfaces/cache-manager.interface';
+import { UtilsModule } from '../utils/utils.module';
 @Module({
   imports: [
     ConfigModule.register({ isGlobal: true }),
+    UtilsModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
