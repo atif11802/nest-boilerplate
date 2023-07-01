@@ -25,6 +25,7 @@ interface Config {
   };
   redisHost: string;
   redisPort: string;
+  redisPassword: string;
 }
 
 @Injectable()
@@ -53,6 +54,7 @@ export class ConfigService {
     this.config.masterWebhookUrl = process.env.MASTER_WEBHOOK_URL;
     this.config.redisHost = process.env.REDIS_HOST;
     this.config.redisPort = process.env.REDIS_PORT;
+    this.config.redisPassword = process.env.REDIS_PASSWORD;
   }
 
   public get(key: keyof Config): any {

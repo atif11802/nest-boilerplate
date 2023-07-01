@@ -10,8 +10,8 @@ import { UserModule } from '../user/user.module';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from 'src/common/exception/global-error.filter';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
-
+import { redisStore } from 'cache-manager-redis-store';
+import { CacheStore } from '@nestjs/common/cache/interfaces/cache-manager.interface';
 @Module({
   imports: [
     ConfigModule.register({ isGlobal: true }),
@@ -26,15 +26,24 @@ import * as redisStore from 'cache-manager-redis-store';
     UserModule,
     CatModule,
     AuthModule,
-
     CacheModule.registerAsync({
       imports: [ConfigModule],
+      isGlobal: true,
+      useFactory: async (config: ConfigService) => {
+        const store = await redisStore({
+          socket: {
+            host: config.get('redisHost'),
+            port: +config.get('redisPort'),
+          },
+          password: config.get('redisPassword'),
+          ttl: 60,
+        });
+
+        return {
+          store: store as unknown as CacheStore,
+        };
+      },
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        store: redisStore,
-        host: configService.get('redisHost'),
-        port: configService.get('redisPort'),
-      }),
     }),
   ],
   controllers: [AppController],

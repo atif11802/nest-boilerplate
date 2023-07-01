@@ -11,16 +11,13 @@ export class AuthService {
     const otp = 123232;
     const isSaved = await this.RedisService.RedisGet(dto.phone);
 
-    console.log(isSaved);
-
     if (isSaved) {
       return new GeneralApiResponse({
         msg: 'User already exists',
         data: isSaved,
       });
     }
-
-    await this.RedisService.RedisSet(dto.phone, otp, 60 * 60 * 24);
+    await this.RedisService.RedisSet(dto.phone, otp, 3 * 60);
 
     return new GeneralApiResponse({
       msg: 'User created successfully',
