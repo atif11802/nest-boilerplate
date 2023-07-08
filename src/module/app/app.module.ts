@@ -13,6 +13,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { CacheStore } from '@nestjs/common/cache/interfaces/cache-manager.interface';
 import { UtilsModule } from '../utils/utils.module';
+import { UserOtpModule } from '../user-otp/user-otp.module';
 @Module({
   imports: [
     ConfigModule.register({ isGlobal: true }),
@@ -47,6 +48,7 @@ import { UtilsModule } from '../utils/utils.module';
       },
       inject: [ConfigService],
     }),
+    UserOtpModule,
   ],
   controllers: [AppController],
   providers: [

@@ -6,16 +6,18 @@ export type UserOtpDocument = HydratedDocument<UserOtp>;
 @Schema()
 export class UserOtp {
   @Prop()
-  name: string;
+  phoneOrEmail: string;
 
   @Prop()
-  email: string;
+  otp: string;
 
   @Prop()
-  age: number;
+  platform: string;
 
-  @Prop()
-  password: string;
+  @Prop({
+    default: 0,
+  })
+  verify_attempt_count: number;
 }
 
 export const UserOtpSchema = SchemaFactory.createForClass(UserOtp);
