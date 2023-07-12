@@ -25,4 +25,27 @@ export class UtilsService {
     }
     return result;
   };
+
+  //format phone number
+  formatPhoneNumber = (phone: string): string => {
+    const phoneNumber = parsePhoneNumber(phone, 'BD');
+    return phoneNumber.formatNational();
+  };
+
+  //create a function to understand is phone or email with regex
+  isPhoneOrEmail = (
+    phone_or_email: string,
+  ): { phone?: string; email?: string; error?: string } => {
+    const phoneRegex =
+      /^\+?[0-9]{1,3}?[-. ]?\(?[0-9]{1,3}\)?[-. ]?[0-9]{1,4}[-. ]?[0-9]{1,4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (phoneRegex.test(phone_or_email)) {
+      return { phone: phone_or_email };
+    } else if (emailRegex.test(phone_or_email)) {
+      return { email: phone_or_email };
+    } else {
+      return { error: 'Invalid phone or email' };
+    }
+  };
 }

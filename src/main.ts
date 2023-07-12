@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-import { HttpExceptionFilter } from './common/exception/http-exception.filter';
 import { AllExceptionsFilter } from './common/exception/all-exceptions.filter';
 import { MyExceptionFilter } from './common/exception/my-exception.filter';
 import { GlobalExceptionFilter } from './common/exception/global-error.filter';
@@ -19,6 +18,8 @@ async function bootstrap() {
     bodyParser: true,
   });
 
+  app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new MyExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -31,6 +32,7 @@ async function bootstrap() {
 
           const str = constraints ? Object.values(constraints).join(', ') : '';
           const msg = str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+
           return msg;
         });
 
@@ -45,7 +47,6 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.useGlobalFilters(new GlobalExceptionFilter());
   await app.listen(configService.get('servicePort') || 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

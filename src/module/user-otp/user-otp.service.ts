@@ -28,11 +28,15 @@ export class UserOtpService {
     return `This action returns all yes`;
   }
 
-  async getUserOtpCount(phoneOrEmail: string) {
+  async getUserOtpCount(phoneOrEmail: string, date: Date) {
     const pipeline = [
       {
         $match: {
-          phone: phoneOrEmail,
+          phoneOrEmail: phoneOrEmail,
+          createdAt: {
+            $gte: date,
+            $lte: new Date(),
+          },
         },
       },
       {
