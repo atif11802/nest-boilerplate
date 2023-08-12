@@ -16,6 +16,20 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop()
+  phone_verified: boolean;
+
+  @Prop()
+  email_verified: boolean;
+
+  @Prop()
+  phone: string;
+
+  @Prop({
+    default: 'user',
+  })
+  role: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

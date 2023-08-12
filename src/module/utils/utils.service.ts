@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import parsePhoneNumber from 'libphonenumber-js';
 import normalizeEmail from 'validator/lib/normalizeEmail';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UtilsService {
   validateEmail = (email: string): boolean | string => {
@@ -9,9 +9,9 @@ export class UtilsService {
     return normalizedEmail;
   };
 
-  getFormattedPhoneNumber = (phone: string): boolean => {
+  getFormattedPhoneNumber = (phone: string): string => {
     const phoneNumber = parsePhoneNumber(phone, 'BD');
-    return phoneNumber.isValid();
+    return phoneNumber.formatNational();
   };
 
   //create a function to create Otp
@@ -47,5 +47,21 @@ export class UtilsService {
     } else {
       return { error: 'Invalid phone or email' };
     }
+  };
+
+  //create a function to hash password
+  hashPassword = async (password: string): Promise<string> => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  };
+
+  //create a function to compare password
+  comparePassword = async (
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> => {
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+    return isMatch;
   };
 }

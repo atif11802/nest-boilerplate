@@ -5,15 +5,22 @@ import { CreateOtp } from './dto/create-otp.dto';
 import { GeneralApiResponse } from 'src/common/response/general-api-response';
 import { UserOtp } from 'src/model/user-otp.schema';
 
+interface getOtp {
+  phoneOrEmail: string;
+  _id: string;
+  otp: string;
+  verify_attempt_count: number;
+}
+
 @Injectable()
 export class UserOtpService {
   constructor(
     @InjectModel(UserOtp.name) private userOtpModel: Model<UserOtp>,
   ) {}
   async createOtp(dto: CreateOtp) {
-    const user = await new this.userOtpModel(dto).save();
+    const otp = await new this.userOtpModel(dto).save();
 
-    if (user) {
+    if (otp) {
       return new GeneralApiResponse({
         msg: 'OTP created successfully',
       });
@@ -28,7 +35,13 @@ export class UserOtpService {
     return `This action returns all yes`;
   }
 
-  async getUserOtpCount(phoneOrEmail: string, date: Date) {
+  async getUserOtpCount({
+    phoneOrEmail,
+    date,
+  }: {
+    phoneOrEmail: string;
+    date: any;
+  }) {
     const pipeline = [
       {
         $match: {
@@ -58,8 +71,29 @@ export class UserOtpService {
     return result[0];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} yes`;
+  async findOne(filter: any): Promise<null | getOtp> {
+    const userOtp = await this.userOtpModel
+      .findOne(filter)
+      .sort({ _id: -1 })
+      .limit(1);
+
+    if (!userOtp) {
+      return null;
+    } else {
+      return userOtp.toObject();
+    }
+  }
+
+  async updateOtp(filter: any, update: any): Promise<boolean | getOtp> {
+    const otpUpdated: any = await this.userOtpModel.updateOne(filter, update, {
+      new: true,
+    });
+
+    if (otpUpdated) {
+      return otpUpdated;
+    } else {
+      return false;
+    }
   }
 
   remove(id: number) {

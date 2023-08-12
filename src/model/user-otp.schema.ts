@@ -20,6 +20,11 @@ export class UserOtp {
     default: 0,
   })
   verify_attempt_count: number;
+
+  @Prop({
+    default: false,
+  })
+  is_verified: boolean;
 }
 
 export const UserOtpSchema = SchemaFactory.createForClass(UserOtp);

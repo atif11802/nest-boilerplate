@@ -9,4 +9,6 @@ export enum ResponseStatus {
   CONFLICT = 'conflict',
   UNPROCESSABLE_ENTITY = 'unprocessable_entity',
   INTERNAL_SERVER_ERROR = 'internal_server_error',
+  NAME_EXISTS = 'name_exists',
+  NAME_NOT_EXISTS = 'name_not_exists',
 }
